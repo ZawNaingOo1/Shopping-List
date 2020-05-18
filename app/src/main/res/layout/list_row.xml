@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:elevation="20dp">
+
+        <CheckBox
+            android:layout_marginStart="5dp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cb_select"/>
+
+        <TextView
+            android:textSize="18sp"
+            android:layout_marginStart="15dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/cb_select"
+            android:id="@+id/txt_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="2dp"
+            android:text="Name"
+            android:textColor="#4d4d4d"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/row_delete"
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_delete_black_24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+<!--        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/cb_select">
+
+
+
+
+&lt;!&ndash;            <TextView
+                android:id="@+id/txt_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Price" />&ndash;&gt;
+        </LinearLayout>-->
+
+    </RelativeLayout>
+
+</LinearLayout>
