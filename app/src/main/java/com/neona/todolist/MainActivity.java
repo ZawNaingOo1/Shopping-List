@@ -1,6 +1,7 @@
 package com.neona.todolist;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
@@ -9,6 +10,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -74,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements OnNewItemAddedLis
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()){
-            case R.id.delete_all : databaseHelper.clearTable();shoppingDataArrayList.clear();displayData();break;
+            case R.id.delete_all : alertDialogForDeleteAll();break;
+            case R.id.settings : startActivity(new Intent(this, SettingsActivity.class));break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -113,5 +117,29 @@ public class MainActivity extends AppCompatActivity implements OnNewItemAddedLis
 
         // Bind the Array Adapter to the ListView
         shoppingListFragment.setListAdapter(shoppingListAdapter);
+    }
+
+    // alert and clear data
+    void alertDialogForDeleteAll(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Delete all!");
+        builder.setMessage("Are you sure you want to clear all?");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                databaseHelper.clearTable();
+                shoppingDataArrayList.clear();
+                displayData();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

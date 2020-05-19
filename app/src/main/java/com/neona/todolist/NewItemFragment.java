@@ -3,6 +3,7 @@ package com.neona.todolist;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,17 +69,21 @@ public class NewItemFragment extends Fragment {
             public void onClick(View v) {
                 String newItem = editText.getText().toString();
 
+                if(TextUtils.isEmpty(newItem)){
+                    Toast.makeText(getContext(),"Enter an item",Toast.LENGTH_LONG).show();
+                }else {
+                    // insert data to database
+                    databaseHelper.insertData(newItem, 0,false);
+                    onNewItemAddedListener.onNewItemAdded(newItem);
 
-                // insert data to database
-                databaseHelper.insertData(newItem, 0,false);
-                onNewItemAddedListener.onNewItemAdded(newItem);
+                    editText.setText("");
 
-                editText.setText("");
-
-                if(shoppingDataArrayList.size() != 0){
-                    ShoppingData shoppingData1 = shoppingDataArrayList.get(0);
-                    Log.d("SQLite list", shoppingData1.getName());
+                    if(shoppingDataArrayList.size() != 0){
+                        ShoppingData shoppingData1 = shoppingDataArrayList.get(0);
+                        Log.d("SQLite list", shoppingData1.getName());
+                    }
                 }
+
             }
         });
 
