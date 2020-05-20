@@ -58,7 +58,6 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingData>{
             @Override
             public void onClick(View v) {
                 if(checkBox.isChecked()){
-                    Toast.makeText(context, String.valueOf(position),Toast.LENGTH_SHORT).show();
                     textViewName.setTextColor(Color.LTGRAY);
                     databaseHelper.updateIsBought(shoppingData.getName().toString(), 1);
                 }else {

@@ -9,9 +9,18 @@
         android:icon="@drawable/ic_delete_sweep_black_24dp"/>
     <item
         app:showAsAction="always"
-        android:id="@+id/settings"
-        android:icon="@drawable/ic_settings_black_24dp"
-        android:title="Settings"/>
+        android:id="@+id/more"
+        android:icon="@drawable/ic_more_vert_black_24dp"
+        android:title="More">
+        <menu>
+            <item android:id="@+id/shareApp"
+                android:title="Share App"
+                android:icon="@drawable/ic_share_black_24dp"/>
+            <item android:id="@+id/rateApp"
+                android:title="Rate on Google Play"
+                android:icon="@drawable/ic_rate_review_black_24dp" />
+        </menu>
+    </item>
 
 
 </menu>

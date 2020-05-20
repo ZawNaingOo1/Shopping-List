@@ -10,9 +10,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +26,7 @@ import com.neona.todolist.Adapter.ShoppingListAdapter;
 import com.neona.todolist.Data.DatabaseHelper;
 import com.neona.todolist.Data.ShoppingData;
 
-import org.rabbitconverter.rabbit.Rabbit;
+//import org.rabbitconverter.rabbit.Rabbit;
 
 import java.util.ArrayList;
 
@@ -78,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements OnNewItemAddedLis
 
         switch (item.getItemId()){
             case R.id.delete_all : alertDialogForDeleteAll();break;
-            case R.id.settings : startActivity(new Intent(this, SettingsActivity.class));break;
+            case R.id.shareApp : shareApp();break;
+            case R.id.rateApp : rateApp();break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -141,5 +145,53 @@ public class MainActivity extends AppCompatActivity implements OnNewItemAddedLis
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    //share app
+
+    public void shareApp(){
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.neona.todolist");
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent,"Contribute good app");
+        startActivity(shareIntent);
+    }
+
+    /*
+     * Start with rating the app
+     * Determine if the Play Store is installed on the device
+     *
+     * */
+    public void rateApp()
+    {
+        try
+        {
+            Intent rateIntent = rateIntentForUrl("market://details");
+            startActivity(rateIntent);
+        }
+        catch (ActivityNotFoundException e)
+        {
+            Intent rateIntent = rateIntentForUrl("https://play.google.com/store/apps/details");
+            startActivity(rateIntent);
+        }
+    }
+
+    public Intent rateIntentForUrl(String url)
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", url, "com.neona.todolist")));
+        int flags = Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK;
+        if (Build.VERSION.SDK_INT >= 21)
+        {
+            flags |= Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
+        }
+        else
+        {
+            //noinspection deprecation
+            flags |= Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET;
+        }
+        intent.addFlags(flags);
+        return intent;
     }
 }

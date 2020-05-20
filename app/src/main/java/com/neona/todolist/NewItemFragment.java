@@ -50,10 +50,23 @@ public class NewItemFragment extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(event.getAction() == KeyEvent.ACTION_DOWN)
-                    if(keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER){
+                    onNewItemAddedListener.onNewItemAdded("newItem");
+                    if( keyCode == KeyEvent.KEYCODE_ENTER){
                         String newItem = editText.getText().toString();
-                        onNewItemAddedListener.onNewItemAdded(newItem);
-                        editText.setText("");
+                        if(TextUtils.isEmpty(newItem)){
+                            Toast.makeText(getContext(),"Enter an item",Toast.LENGTH_LONG).show();
+                        }else {
+                            // insert data to database
+                            databaseHelper.insertData(newItem, 0,false);
+                            onNewItemAddedListener.onNewItemAdded(newItem);
+
+                            editText.setText("");
+
+                            if(shoppingDataArrayList.size() != 0){
+                                ShoppingData shoppingData1 = shoppingDataArrayList.get(0);
+                                Log.d("SQLite list", shoppingData1.getName());
+                            }
+                        }
 
                         return true;
                     }
