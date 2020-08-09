@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -84,6 +85,9 @@ public class NewItemFragment extends Fragment {
 
                 if(TextUtils.isEmpty(newItem)){
                     Toast.makeText(getContext(),"Enter an item",Toast.LENGTH_LONG).show();
+                    editText.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
                 }else {
                     // insert data to database
                     databaseHelper.insertData(newItem, 0,false);

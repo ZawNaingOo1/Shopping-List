@@ -20,8 +20,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.neona.todolist.Adapter.ShoppingListAdapter;
 import com.neona.todolist.Data.DatabaseHelper;
 import com.neona.todolist.Data.ShoppingData;
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnNewItemAddedLis
     int bought;
 
     DatabaseHelper databaseHelper;
+    TextView emptyTextV;
 
     ShoppingListAdapter shoppingListAdapter;
     ShoppingListFragment shoppingListFragment;
@@ -53,16 +60,55 @@ public class MainActivity extends AppCompatActivity implements OnNewItemAddedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        emptyTextV = findViewById(R.id.emptyText);
+
         displayData();
+        if(shoppingDataArrayList.size() != 0){
+            emptyTextV.setVisibility(View.GONE);
+        }
 
-/*        // ZawGyi to Unicode Test
-        TextView uniTextView = findViewById(R.id.uni_text);
-        String uniText = uniTextView.getText().toString();
-        String zgText = Rabbit.uni2zg(uniText);
 
-        TextView zgTextView = findViewById(R.id.zg_text);
-        zgTextView.setText(zgText);*/
+        //google ads
+        MobileAds.initialize(this,"ca-app-pub-2822531422299707~5192523563");
+        AdView mAdView = findViewById(R.id.adView1);
+        AdRequest adRequest = new AdRequest.Builder().build();
 
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                Toast.makeText(getApplicationContext(),errorCode,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
+
+        mAdView.loadAd(adRequest);
     }
 
 
@@ -92,6 +138,11 @@ public class MainActivity extends AppCompatActivity implements OnNewItemAddedLis
         toDoItemsArrayList.add(newItem);
         shoppingDataArrayList.clear();
         displayData();
+        if(shoppingDataArrayList.size() == 0){
+            emptyTextV.setVisibility(View.VISIBLE);
+        }else {
+            emptyTextV.setVisibility(View.GONE);
+        }
     }
 
     void setShoppingArrayList(){
@@ -135,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements OnNewItemAddedLis
                 databaseHelper.clearTable();
                 shoppingDataArrayList.clear();
                 displayData();
+                emptyTextV.setVisibility(View.VISIBLE);
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -182,15 +234,7 @@ public class MainActivity extends AppCompatActivity implements OnNewItemAddedLis
     {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", url, "com.neona.todolist")));
         int flags = Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK;
-        if (Build.VERSION.SDK_INT >= 21)
-        {
-            flags |= Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
-        }
-        else
-        {
-            //noinspection deprecation
-            flags |= Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET;
-        }
+        flags |= Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
         intent.addFlags(flags);
         return intent;
     }

@@ -1,6 +1,7 @@
 package com.neona.todolist.Adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingData>{
     DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
     private OnNewItemAddedListener onNewItemAddedListener;
 
+
     public ShoppingListAdapter(@NonNull Context context, int resource, @NonNull List<ShoppingData> objects) {
         super(context, resource, objects);
 
@@ -44,6 +46,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingData>{
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
+
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(resource, null);
 
@@ -53,16 +56,21 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingData>{
         final ImageView rowDelete = view.findViewById(R.id.row_delete);
 
         final ShoppingData shoppingData = shoppingDataList.get(position);
+        onNewItemAddedListener = (OnNewItemAddedListener) context;
 
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(checkBox.isChecked()){
                     textViewName.setTextColor(Color.LTGRAY);
-                    databaseHelper.updateIsBought(shoppingData.getName().toString(), 1);
+                    databaseHelper.updateIsBought(shoppingData.getName(), 1);
+                    onNewItemAddedListener.onNewItemAdded(shoppingData.getName());
+                    Toast.makeText(context,shoppingData.getName() + " is checked" ,Toast.LENGTH_LONG).show();
                 }else {
                     textViewName.setTextColor(Color.BLACK);
                     databaseHelper.updateIsBought(shoppingData.getName(), 0);
+                    onNewItemAddedListener.onNewItemAdded(shoppingData.getName());
+                    Toast.makeText(context,shoppingData.getName() + " is unchecked" ,Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -72,7 +80,6 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingData>{
             @Override
             public void onClick(View v) {
                 databaseHelper.deleteRow(shoppingData.getName());
-                onNewItemAddedListener = (OnNewItemAddedListener) context;
                 onNewItemAddedListener.onNewItemAdded(shoppingData.getName());
 
                 Toast.makeText(context,shoppingData.getName() + " is deleted" ,Toast.LENGTH_SHORT).show();
@@ -80,7 +87,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingData>{
         });
 
         if(shoppingData.isBought() == 0){
-
+            checkBox.setChecked(false);
             textViewName.setTextColor(Color.BLACK);
 
         }else {

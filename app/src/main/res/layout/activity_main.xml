@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <!--Google ads-->
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:layout_margin="5dp"
+        android:id="@+id/adView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-2822531422299707/2566360228" />
 
     <fragment
-        android:name="com.neona.todolist.NewItemFragment"
         android:id="@+id/NewItemFragment"
+        android:name="com.neona.todolist.NewItemFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"/>
+        android:layout_marginBottom="1dp" />
 
-    <com.google.android.material.card.MaterialCardView
+    <TextView
+        android:textSize="20sp"
+        android:padding="100dp"
+        android:visibility="visible"
+        android:id="@+id/emptyText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:text="@string/empty_text"
+        android:textAlignment="center"/>
 
-        <fragment
-            android:name="com.neona.todolist.ShoppingListFragment"
-            android:id="@+id/ToDoListFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </com.google.android.material.card.MaterialCardView>
+    <fragment
+        android:id="@+id/ToDoListFragment"
+        android:name="com.neona.todolist.ShoppingListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
