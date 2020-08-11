@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/NewItemFragment"
-        android:name="com.neona.todolist.NewItemFragment"
+        android:name="com.neona.todolist.main_screen.add_new_item.NewItemFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp" />
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/ToDoListFragment"
-        android:name="com.neona.todolist.ShoppingListFragment"
+        android:name="com.neona.todolist.main_screen.item_list.ShoppingListFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

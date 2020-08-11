@@ -1,4 +1,4 @@
-package com.neona.todolist.Data;
+package com.neona.todolist.database;
 
 public class ShoppingData {
     int price;
