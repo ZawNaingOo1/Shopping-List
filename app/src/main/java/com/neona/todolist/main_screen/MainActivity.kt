@@ -19,6 +19,7 @@ import com.neona.todolist.R
 import com.neona.todolist.adapter.ShoppingListAdapter
 import com.neona.todolist.database.DatabaseHelper
 import com.neona.todolist.database.ShoppingData
+import com.neona.todolist.main_screen.item_list.ItemListAdapter
 import com.neona.todolist.main_screen.item_list.ShoppingListFragment
 import java.util.*
 
@@ -34,17 +35,16 @@ class MainActivity : AppCompatActivity(), OnNewItemAddedListener {
     var bought = 0
     var databaseHelper: DatabaseHelper? = null
     private lateinit var emptyTextV: TextView
-    var shoppingListAdapter: ShoppingListAdapter? = null
+    //var shoppingListAdapter: ShoppingListAdapter? = null
     var shoppingListFragment: ShoppingListFragment? = null
     var shoppingDataArrayList = ArrayList<ShoppingData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         emptyTextV = findViewById(R.id.emptyText)
-        displayData()
-        if (shoppingDataArrayList.size != 0) {
-            emptyTextV.visibility = View.GONE
-        }
+        databaseHelper = DatabaseHelper(this)
+        //setShoppingArrayList()
+        //displayData()
 
 
         //google ads
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), OnNewItemAddedListener {
     override fun onNewItemAdded(newItem: String?) {
         toDoItemsArrayList.add(newItem)
         shoppingDataArrayList.clear()
-        displayData()
+        //displayData()
         if (shoppingDataArrayList.size == 0) {
             emptyTextV.visibility = View.VISIBLE
         } else {
@@ -120,18 +120,23 @@ class MainActivity : AppCompatActivity(), OnNewItemAddedListener {
         }
     }
 
-    private fun displayData() {
+    /*private fun displayData() {
         databaseHelper = DatabaseHelper(this)
         setShoppingArrayList()
 
         //Get references to the Fragment
         val fragmentManager = supportFragmentManager
         shoppingListFragment = fragmentManager.findFragmentById(R.id.ToDoListFragment) as ShoppingListFragment?
-        shoppingListAdapter = ShoppingListAdapter(this, R.layout.list_row, shoppingDataArrayList)
+        //shoppingListAdapter = ShoppingListAdapter(this, R.layout.list_row, shoppingDataArrayList)
+
+        var itemListAdapter = ItemListAdapter(this,shoppingDataArrayList)
 
         // Bind the Array Adapter to the ListView
-        shoppingListFragment!!.listAdapter = shoppingListAdapter
-    }
+        //shoppingListFragment!!.listAdapter = shoppingListAdapter
+
+        shoppingListFragment!!.adapter = itemListAdapter
+
+    }*/
 
     // alert and clear data
     private fun alertDialogForDeleteAll() {
@@ -142,7 +147,7 @@ class MainActivity : AppCompatActivity(), OnNewItemAddedListener {
         builder.setPositiveButton("Yes") { _, _ ->
             databaseHelper!!.clearTable()
             shoppingDataArrayList.clear()
-            displayData()
+            //displayData()
             emptyTextV.visibility = View.VISIBLE
         }
         builder.setNegativeButton("No") { dialog, _ -> dialog.cancel() }
