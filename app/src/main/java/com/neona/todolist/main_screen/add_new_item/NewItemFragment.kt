@@ -14,25 +14,24 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.neona.todolist.R
-import com.neona.todolist.database.DatabaseHelper
-import com.neona.todolist.database.ShoppingData
+import com.neona.todolist.database.ShoppingItem
 import com.neona.todolist.main_screen.OnNewItemAddedListener
 import java.util.*
 
 class NewItemFragment : Fragment() {
     var ID = 0
-    var name: String? = null
+    var name: String? = ""
     var price = 0
-    var bought = 0
-    var shoppingDataArrayList = ArrayList<ShoppingData>()
+    var bought = false
+    var shoppingDataArrayList = ArrayList<ShoppingItem>()
     private var onNewItemAddedListener: OnNewItemAddedListener? = null
-    var databaseHelper: DatabaseHelper? = null
+    //var databaseHelper: DatabaseHelper? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.new_item_fragment, container, false)
         val editText = view.findViewById<View>(R.id.editText) as EditText
 
         // Database helper
-        databaseHelper = DatabaseHelper(context)
+        //databaseHelper = DatabaseHelper(context)
 
         // EditText listener
         editText.setOnKeyListener(addItemOnKeyboardEnterKey(editText))
@@ -42,7 +41,7 @@ class NewItemFragment : Fragment() {
         btnEnter.setOnClickListener {
             addItemOnEnterBtn(editText)
         }
-        setShoppingArrayList()
+        //setShoppingArrayList()
         return view
     }
 
@@ -55,12 +54,12 @@ class NewItemFragment : Fragment() {
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
         } else {
             // insert data to database
-            databaseHelper!!.insertData(newItem, 0, false)
+            //databaseHelper!!.insertData(newItem, 0, false)
             onNewItemAddedListener!!.onNewItemAdded(newItem)
             editText.setText("")
             if (shoppingDataArrayList.size != 0) {
                 val shoppingData1 = shoppingDataArrayList[0]
-                Log.d("SQLite list", shoppingData1.name)
+                Log.d("SQLite list", shoppingData1.itemName)
             }
         }
     }
@@ -74,12 +73,12 @@ class NewItemFragment : Fragment() {
                     Toast.makeText(context, "Enter an item", Toast.LENGTH_LONG).show()
                 } else {
                     // insert data to database
-                    databaseHelper!!.insertData(newItem, 0, false)
+                    //databaseHelper!!.insertData(newItem, 0, false)
                     onNewItemAddedListener!!.onNewItemAdded(newItem)
                     editText.setText("")
                     if (shoppingDataArrayList.size != 0) {
                         val shoppingData1 = shoppingDataArrayList[0]
-                        Log.d("SQLite list", shoppingData1.name)
+                        Log.d("SQLite list", shoppingData1.itemName)
                     }
                 }
                 return@OnKeyListener true
@@ -88,23 +87,4 @@ class NewItemFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        onNewItemAddedListener = try {
-            context as OnNewItemAddedListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnNewItemAddedListener")
-        }
-    }
-
-    private fun setShoppingArrayList() {
-        val res = databaseHelper!!.allData
-        while (res.moveToNext()) {
-            ID = res.getInt(0)
-            name = res.getString(1)
-            price = res.getInt(2)
-            bought = res.getInt(3)
-            shoppingDataArrayList.add(0, ShoppingData(ID, name, price, bought))
-        }
-    }
 }

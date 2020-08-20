@@ -7,11 +7,13 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "shopping_list_table")
 data class ShoppingItem(
         @PrimaryKey(autoGenerate = true)
-        var ID: Int = 0,
+        val ID: Long=0L,
         @ColumnInfo(name = "price")
         var price: Int = 0,
         @ColumnInfo(name = "item_name")
         var itemName: String? = null,
         @ColumnInfo(name = "is_bought")
         var isBought: Boolean = false
-)
+){
+
+}

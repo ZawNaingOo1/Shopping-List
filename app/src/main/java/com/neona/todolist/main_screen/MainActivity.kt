@@ -6,46 +6,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.neona.todolist.R
-import com.neona.todolist.adapter.ShoppingListAdapter
-import com.neona.todolist.database.DatabaseHelper
-import com.neona.todolist.database.ShoppingData
-import com.neona.todolist.main_screen.item_list.ItemListAdapter
-import com.neona.todolist.main_screen.item_list.ShoppingListFragment
-import java.util.*
 
-//import org.rabbitconverter.rabbit.Rabbit;
-class MainActivity : AppCompatActivity(), OnNewItemAddedListener {
-    // ArrayList of to do items
-    private val toDoItemsArrayList = ArrayList<String?>()
+class MainActivity : AppCompatActivity() {
 
-    // setting arrayList
-    private var id = 0
-    var name: String? = null
-    var price = 0
-    var bought = 0
-    var databaseHelper: DatabaseHelper? = null
-    private lateinit var emptyTextV: TextView
-    //var shoppingListAdapter: ShoppingListAdapter? = null
-    var shoppingListFragment: ShoppingListFragment? = null
-    var shoppingDataArrayList = ArrayList<ShoppingData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        emptyTextV = findViewById(R.id.emptyText)
-        databaseHelper = DatabaseHelper(this)
-        //setShoppingArrayList()
-        //displayData()
-
 
         //google ads
         MobileAds.initialize(this, "ca-app-pub-2822531422299707~5192523563")
@@ -91,69 +64,13 @@ class MainActivity : AppCompatActivity(), OnNewItemAddedListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.delete_all -> alertDialogForDeleteAll()
+            //R.id.delete_all -> alertDialogForDeleteAll()
             R.id.shareApp -> shareApp()
             R.id.rateApp -> rateApp()
         }
         return super.onOptionsItemSelected(item)
     }
-
-    override fun onNewItemAdded(newItem: String?) {
-        toDoItemsArrayList.add(newItem)
-        shoppingDataArrayList.clear()
-        //displayData()
-        if (shoppingDataArrayList.size == 0) {
-            emptyTextV.visibility = View.VISIBLE
-        } else {
-            emptyTextV.visibility = View.GONE
-        }
-    }
-
-    private fun setShoppingArrayList() {
-        val res = databaseHelper!!.allData
-        while (res.moveToNext()) {
-            id = res.getInt(0)
-            name = res.getString(1)
-            price = res.getInt(2)
-            bought = res.getInt(3)
-            shoppingDataArrayList.add(ShoppingData(id, name, price, bought))
-        }
-    }
-
-    /*private fun displayData() {
-        databaseHelper = DatabaseHelper(this)
-        setShoppingArrayList()
-
-        //Get references to the Fragment
-        val fragmentManager = supportFragmentManager
-        shoppingListFragment = fragmentManager.findFragmentById(R.id.ToDoListFragment) as ShoppingListFragment?
-        //shoppingListAdapter = ShoppingListAdapter(this, R.layout.list_row, shoppingDataArrayList)
-
-        var itemListAdapter = ItemListAdapter(this,shoppingDataArrayList)
-
-        // Bind the Array Adapter to the ListView
-        //shoppingListFragment!!.listAdapter = shoppingListAdapter
-
-        shoppingListFragment!!.adapter = itemListAdapter
-
-    }*/
-
-    // alert and clear data
-    private fun alertDialogForDeleteAll() {
-        val builder = AlertDialog.Builder(this@MainActivity)
-        builder.setTitle("Delete all!")
-        builder.setMessage("Are you sure you want to clear all?")
-        builder.setCancelable(false)
-        builder.setPositiveButton("Yes") { _, _ ->
-            databaseHelper!!.clearTable()
-            shoppingDataArrayList.clear()
-            //displayData()
-            emptyTextV.visibility = View.VISIBLE
-        }
-        builder.setNegativeButton("No") { dialog, _ -> dialog.cancel() }
-        val alertDialog = builder.create()
-        alertDialog.show()
-    }
+    
 
     //share app
     private fun shareApp() {
