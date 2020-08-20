@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.neona.todolist.R
 import com.neona.todolist.database.ShoppingItem
-import com.neona.todolist.main_screen.OnNewItemAddedListener
 import java.util.*
 
 class NewItemFragment : Fragment() {
@@ -24,7 +23,7 @@ class NewItemFragment : Fragment() {
     var price = 0
     var bought = false
     var shoppingDataArrayList = ArrayList<ShoppingItem>()
-    private var onNewItemAddedListener: OnNewItemAddedListener? = null
+    //private var onNewItemAddedListener: OnNewItemAddedListener? = null
     //var databaseHelper: DatabaseHelper? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.new_item_fragment, container, false)
@@ -55,7 +54,7 @@ class NewItemFragment : Fragment() {
         } else {
             // insert data to database
             //databaseHelper!!.insertData(newItem, 0, false)
-            onNewItemAddedListener!!.onNewItemAdded(newItem)
+            //onNewItemAddedListener!!.onNewItemAdded(newItem)
             editText.setText("")
             if (shoppingDataArrayList.size != 0) {
                 val shoppingData1 = shoppingDataArrayList[0]
@@ -66,7 +65,7 @@ class NewItemFragment : Fragment() {
 
     private fun addItemOnKeyboardEnterKey(editText: EditText): View.OnKeyListener {
         return View.OnKeyListener { v, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN) onNewItemAddedListener!!.onNewItemAdded("newItem")
+            if (event.action == KeyEvent.ACTION_DOWN) //onNewItemAddedListener!!.onNewItemAdded("newItem")
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 val newItem = editText.text.toString()
                 if (TextUtils.isEmpty(newItem)) {
@@ -74,7 +73,7 @@ class NewItemFragment : Fragment() {
                 } else {
                     // insert data to database
                     //databaseHelper!!.insertData(newItem, 0, false)
-                    onNewItemAddedListener!!.onNewItemAdded(newItem)
+                    //onNewItemAddedListener!!.onNewItemAdded(newItem)
                     editText.setText("")
                     if (shoppingDataArrayList.size != 0) {
                         val shoppingData1 = shoppingDataArrayList[0]
