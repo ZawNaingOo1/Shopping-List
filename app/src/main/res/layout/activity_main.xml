@@ -1,29 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <!--Google ads-->
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:layout_margin="5dp"
-        android:id="@+id/adView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-2822531422299707/2566360228" />
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <fragment
-        android:id="@+id/NewItemFragment"
-        android:name="com.neona.todolist.main_screen.add_new_item.NewItemFragment"
+    <data>
+        <variable
+            name="itemListViewModel"
+            type="com.neona.todolist.main_screen.item_list.ItemListViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/ToDoListFragment"
-        android:name="com.neona.todolist.main_screen.item_list.ShoppingListFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </fragment>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:focusable="false"
+            android:focusableInTouchMode="true">
 
-</LinearLayout>
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_bg"
+                android:hint="@string/addItemHint"
+                android:padding="10dp"
+                android:autofillHints="apple"
+                android:inputType="text" />
+
+            <ImageButton
+                android:layout_marginStart="2dp"
+                android:background="@drawable/add_button_bg"
+                android:id="@+id/btn_enter"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_add_circle_black_24dp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_list_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </LinearLayout>
+</layout>

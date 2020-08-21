@@ -14,6 +14,4 @@ data class ShoppingItem(
         var itemName: String? = null,
         @ColumnInfo(name = "is_bought")
         var isBought: Boolean = false
-){
-
-}
+)

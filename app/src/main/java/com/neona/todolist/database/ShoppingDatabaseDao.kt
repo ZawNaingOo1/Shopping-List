@@ -25,4 +25,7 @@ interface ShoppingDatabaseDao {
     //TODO Delete table
     @Query("DELETE FROM shopping_list_table")
     fun clearTable()
+
+    @Query("UPDATE shopping_list_table SET is_bought = :isBought WHERE ID = :id")
+    fun updateIsBought(isBought:Boolean,id: Long)
 }

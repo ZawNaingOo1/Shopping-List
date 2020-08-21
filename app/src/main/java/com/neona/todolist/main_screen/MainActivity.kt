@@ -6,13 +6,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.neona.todolist.R
+import com.neona.todolist.database.ShoppingListDatabase
+import com.neona.todolist.databinding.ActivityMainBinding
+import com.neona.todolist.main_screen.item_list.ItemListAdapter
+import com.neona.todolist.main_screen.item_list.ItemListViewModel
+import com.neona.todolist.main_screen.item_list.ItemListViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,39 +23,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //google ads
-        MobileAds.initialize(this, "ca-app-pub-2822531422299707~5192523563")
-        val mAdView = findViewById<AdView>(R.id.adView1)
-        val adRequest = AdRequest.Builder().build()
-        mAdView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
+        val binding: ActivityMainBinding = DataBindingUtil
+                .setContentView(this,R.layout.activity_main)
+        val application = this.application
+        val dataSource = ShoppingListDatabase.getInstance(application).shoppingDatabaseDao
+        val viewModelFactory = ItemListViewModelFactory(dataSource, application)
+
+        val itemListViewModel =
+                ViewModelProvider(
+                        this, viewModelFactory
+                ).get(ItemListViewModel::class.java)
+
+        binding.itemListViewModel = itemListViewModel
+
+        // adapter
+        val adapter = ItemListAdapter()
+        binding.itemListRecyclerView.hasFixedSize()
+        binding.itemListRecyclerView.adapter = adapter
+
+        itemListViewModel.items.observe(this, Observer {
+            it?.let {
+                adapter.data = it
+                //Log.i("ListSize",it.size.toString())
             }
 
-            override fun onAdFailedToLoad(errorCode: Int) {
-                // Code to be executed when an ad request fails.
-                Toast.makeText(applicationContext, errorCode, Toast.LENGTH_LONG).show()
-            }
+        })
 
-            override fun onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            override fun onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            override fun onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            override fun onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
+        binding.btnEnter.setOnClickListener {
+            itemListViewModel.onNewItemInsert(binding.editText.text.toString())
         }
-        mAdView.loadAd(adRequest)
+
+        binding.lifecycleOwner = this
     }
 
     //menu
