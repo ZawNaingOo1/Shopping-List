@@ -41,7 +41,10 @@ class ItemListViewModel(dataSource: ShoppingDatabaseDao, application: Applicatio
     }
 
     private suspend fun updateIsBought(isBought:Boolean, id:Long){
-        database.updateIsBought(isBought,id)
+
+        withContext(Dispatchers.IO){
+            database.updateIsBought(isBought,id)
+        }
     }
 
     private suspend fun getItems(dataSource: ShoppingDatabaseDao): LiveData<List<ShoppingItem>> {
@@ -49,6 +52,32 @@ class ItemListViewModel(dataSource: ShoppingDatabaseDao, application: Applicatio
         return withContext(Dispatchers.IO) {
             val itemList = dataSource.getAllRows()
             itemList
+        }
+    }
+
+    // delete one item
+    fun onDeleteOneItem(itemId:Long){
+        uiScope.launch {
+            deleteOneItem(itemId)
+        }
+    }
+
+    private suspend fun deleteOneItem(id: Long){
+        withContext(Dispatchers.IO){
+            database.deleteRow(id)
+        }
+    }
+
+    // delete shopping item list table
+    fun onDeleteShoppingListTable(){
+        uiScope.launch {
+            deleteShoppingListTable()
+        }
+    }
+
+    private suspend fun deleteShoppingListTable(){
+        withContext(Dispatchers.IO){
+            database.clearTable()
         }
     }
 

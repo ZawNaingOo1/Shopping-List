@@ -1,11 +1,14 @@
 package com.neona.todolist.main_screen
 
 import android.content.ActivityNotFoundException
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.service.autofill.OnClickAction
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -19,6 +22,8 @@ import com.neona.todolist.main_screen.item_list.ItemListViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var itemListViewModel:ItemListViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         val dataSource = ShoppingListDatabase.getInstance(application).shoppingDatabaseDao
         val viewModelFactory = ItemListViewModelFactory(dataSource, application)
 
-        val itemListViewModel =
+        itemListViewModel =
                 ViewModelProvider(
                         this, viewModelFactory
                 ).get(ItemListViewModel::class.java)
@@ -37,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         binding.itemListViewModel = itemListViewModel
 
         // adapter
-        val adapter = ItemListAdapter()
+        val adapter = ItemListAdapter(itemListViewModel)
         binding.itemListRecyclerView.hasFixedSize()
         binding.itemListRecyclerView.adapter = adapter
 
@@ -65,13 +70,27 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            //R.id.delete_all -> alertDialogForDeleteAll()
+            R.id.delete_all -> alertDialogForDeleteAll()
             R.id.shareApp -> shareApp()
             R.id.rateApp -> rateApp()
         }
         return super.onOptionsItemSelected(item)
     }
-    
+
+    private fun alertDialogForDeleteAll() {
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Delete all list")
+                .setMessage("Are you sure you want to delete all list?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { _, _ ->
+                    itemListViewModel.onDeleteShoppingListTable()
+                }
+                .setNegativeButton("No"){_,_->
+
+                }
+        alertDialog.create().show()
+    }
+
 
     //share app
     private fun shareApp() {
